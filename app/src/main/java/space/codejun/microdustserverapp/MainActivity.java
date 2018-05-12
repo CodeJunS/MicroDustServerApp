@@ -44,27 +44,15 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            public void onDataReceived(byte[] data, String message) {
-                Map<String, Object> city = new HashMap<>();
-                //city.put("pm_10", "10");
-                city.put("pm_25", message);
+        bt.setOnDataReceivedListener((data, message) -> {
+            Map<String, Object> city = new HashMap<>();
+            //city.put("pm_10", "10");
+            city.put("pm_25", message);
 
-                db.collection("AirCondition").document("MicroDust")
-                        .set(city)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully written!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document", e);
-                            }
-                        });
-            }
+            db.collection("AirCondition").document("MicroDust")
+                    .set(city)
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
         });
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
