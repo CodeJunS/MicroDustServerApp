@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,14 +48,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         bt.setOnDataReceivedListener((data, message) -> {
-            Map<String, Object> city = new HashMap<>();
-            //city.put("pm_10", "10");
-            city.put("pm_25", message);
 
-            db.collection("AirCondition").document("MicroDust")
-                    .set(city)
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+            Log.d(TAG, message);
+            try {
+                JSONObject jsonObject = new JSONObject(message);
+                jsonObject.getInt("pm2_5");
+                jsonObject.getInt("pm10");
+
+                Map<String, Object> city = new HashMap<>();
+                city.put("pm_10", jsonObject.getString("pm10"));
+                city.put("pm_25", jsonObject.getString("pm2_5"));
+
+                db.collection("AirCondition").document("MicroDust")
+                        .set(city)
+                        .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                        .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         });
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
