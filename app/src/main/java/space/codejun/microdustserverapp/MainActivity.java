@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 jsonObject.getInt("pm10");
 
                 Map<String, Object> city = new HashMap<>();
-                city.put("pm_10", jsonObject.getString("pm10"));
-                city.put("pm_25", jsonObject.getString("pm2_5"));
+                city.put("pm_10", jsonObject.getInt("pm10"));
+                city.put("pm_25", jsonObject.getInt("pm2_5"));
 
                 db.collection("AirCondition").document("MicroDust")
                         .set(city)
