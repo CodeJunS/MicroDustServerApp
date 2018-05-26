@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, message);
             try {
                 JSONObject jsonObject = new JSONObject(message);
-                jsonObject.getInt("pm2_5");
-                jsonObject.getInt("pm10");
+                String pm_25 = String.valueOf(jsonObject.getInt("pm2_5"));
+                String pm10 = String.valueOf(jsonObject.getInt("pm10"));
 
                 Map<String, Object> city = new HashMap<>();
-                city.put("pm_10", jsonObject.getInt("pm10"));
-                city.put("pm_25", jsonObject.getInt("pm2_5"));
+                city.put("pm_10", pm10);
+                city.put("pm_25", pm_25);
 
                 db.collection("AirCondition").document("MicroDust")
                         .set(city)
